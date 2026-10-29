@@ -1,0 +1,287 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mysterious Gift Box</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: Georgia, serif;
+    color: #fff3d5;
+    background: radial-gradient(circle, #20202a, #080a0f 70%);
+}
+
+.container {
+    width: 100%;
+    max-width: 550px;
+    padding: 35px 25px;
+    text-align: center;
+    border: 2px solid #c99a45;
+    border-radius: 20px;
+    box-shadow: 0 0 30px #000;
+}
+
+h1 {
+    color: #e9bd62;
+    font-size: clamp(30px, 7vw, 43px);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #d6cbb7;
+    line-height: 1.6;
+}
+
+.gift {
+    font-size: 110px;
+    margin: 25px 0;
+    animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+label {
+    display: block;
+    text-align: left;
+    color: #e9bd62;
+    margin: 20px 0 10px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #c99a45;
+    border-radius: 10px;
+    background: #10131a;
+    color: white;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.open-button {
+    background: linear-gradient(135deg, #f4d68d, #b77b26);
+    color: #171006;
+}
+
+.back-button {
+    background: transparent;
+    color: #e9bd62;
+    border: 1px solid #c99a45;
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
+.message {
+    color: #ffaaa0;
+    min-height: 20px;
+    margin-top: 12px;
+}
+
+.result {
+    margin: 25px 0;
+    padding: 25px 10px;
+    border: 1px solid #c99a45;
+    border-radius: 15px;
+    background: #11141b;
+}
+
+.result h2 {
+    color: #e9bd62;
+    font-size: 32px;
+    overflow-wrap: anywhere;
+}
+
+.hidden {
+    display: none;
+}
+
+.note {
+    color: #aaa18f;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <p style="color:#e9bd62; letter-spacing:4px;">
+        ✨ SECRET GIFT EXCHANGE ✨
+    </p>
+
+    <h1>Mysterious Gift Box</h1>
+
+    <p class="subtitle">
+        Enter your name to unlock the mystery and discover
+        who you are buying a gift for.
+    </p>
+
+    <!-- NAME ENTRY SCREEN -->
+    <section id="entryScreen">
+
+        <div class="gift">🎁</div>
+
+        <label for="personName">ENTER YOUR NAME</label>
+
+        <input
+            type="text"
+            id="personName"
+            placeholder="Type your name here..."
+            maxlength="40"
+            autocomplete="off"
+        >
+
+        <button class="open-button" onclick="openGift()">
+            🔒 UNLOCK MY GIFT
+        </button>
+
+        <div class="message" id="message"></div>
+
+        <p class="note">
+            Your recipient is a secret. Please do not share
+            your result with the other participants!
+        </p>
+
+    </section>
+
+
+    <!-- GIFT REVEAL SCREEN -->
+    <section id="giftScreen" class="hidden">
+
+        <div class="gift">🎁✨</div>
+
+        <p class="subtitle" id="welcome"></p>
+
+        <div class="result">
+
+            <p style="color:#c9bda5; letter-spacing:2px;">
+                YOU ARE BUYING A GIFT FOR
+            </p>
+
+            <h2 id="recipient"></h2>
+
+            <p>🤫 Keep it a secret!</p>
+
+        </div>
+
+        <button class="back-button" onclick="goBack()">
+            ← BACK TO NAME ENTRY
+        </button>
+
+    </section>
+
+</div>
+
+<script>
+
+// Gift assignments
+const assignments = {
+    "rolie": "Julia",
+    "julia": "Mutonda",
+    "phumu": "Shonie",
+    "thendo": "Phumu",
+    "zwivhuya": "Thau",
+    "roli": "Rolie",
+    "shonie": "Thendo",
+    "mutonda": "Zwivhuya",
+    "thau": "Roli"
+};
+
+
+// Open the gift
+function openGift() {
+
+    const input = document.getElementById("personName");
+    const name = input.value.trim();
+    const message = document.getElementById("message");
+
+    if (name === "") {
+        message.textContent = "Please enter your name first!";
+        input.focus();
+        return;
+    }
+
+    const key = name.toLocaleLowerCase();
+
+    if (!Object.prototype.hasOwnProperty.call(assignments, key)) {
+        message.textContent =
+            "Name not found. Please check your spelling and try again.";
+        input.focus();
+        return;
+    }
+
+    // Display only this person's recipient
+    document.getElementById("welcome").textContent =
+        "Hello, " + name + "! Your mystery has been unlocked.";
+
+    document.getElementById("recipient").textContent =
+        assignments[key];
+
+    document.getElementById("entryScreen").classList.add("hidden");
+    document.getElementById("giftScreen").classList.remove("hidden");
+
+}
+
+
+// Return to the name entry screen
+function goBack() {
+
+    document.getElementById("giftScreen").classList.add("hidden");
+    document.getElementById("entryScreen").classList.remove("hidden");
+
+    document.getElementById("personName").value = "";
+    document.getElementById("message").textContent = "";
+
+    document.getElementById("recipient").textContent = "";
+    document.getElementById("welcome").textContent = "";
+
+    document.getElementById("personName").focus();
+
+}
+
+
+// Allow Enter key to open the gift
+document.getElementById("personName").addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+        openGift();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
+```
